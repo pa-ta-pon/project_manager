@@ -1,0 +1,40 @@
+version: "3"
+services:
+    jenkins:
+        image: jenkins/jenkins:lts
+        # restart: on-failure
+        restart: always
+        user: root
+        ports:
+            - "8080:8080"
+            - "50000:50000"
+        networks:
+            - jenkins
+        volumes:
+            - ./data/jenkins_home:/var/jenkins_home
+        tty: true
+    mysql:
+        image: mysql:5.7
+        restart: always
+        ulimits:
+            nofile:
+                soft: 65535
+                hard: 65535
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=jenkins
+        ports:
+            - "3307:3306"
+        networks:
+            - jenkins
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+        command:
+            - --max-connections=500
+
+networks:
+    jenkins:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.30.255.0/24
