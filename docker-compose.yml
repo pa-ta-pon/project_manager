@@ -36,5 +36,5 @@ networks:
     jenkins:
         ipam:
             driver: default
-            config:
-                - subnet: 172.30.255.0/24
+            #config:
+            #    - subnet: 172.30.255.0/24
